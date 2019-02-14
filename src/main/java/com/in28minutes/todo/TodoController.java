@@ -36,8 +36,7 @@ public class TodoController {
 
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
 	public String showTodosList(ModelMap model) {
-		String user = (String) model.get("name");
-		model.addAttribute("todos", service.retrieveTodos(user));
+		model.addAttribute("todos", service.retrieveTodos(retrieveLoggedinUserName()));
 		return "list-todos";
 	}
 
@@ -53,7 +52,7 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		service.addTodo((String) model.get("name"), todo.getDesc(),
+		service.addTodo(retrieveLoggedinUserName(), todo.getDesc(),
 				todo.getTargetDate(), false);
 		model.clear();// to prevent request parameter "name" to be passed
 		return "redirect:/list-todos";
@@ -71,7 +70,7 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		todo.setUser((String) model.get("name"));
+		todo.setUser(retrieveLoggedinUserName());
 		service.updateTodo(todo);
 
 		model.clear();// to prevent request parameter "name" to be passed
@@ -85,4 +84,8 @@ public class TodoController {
 		return "redirect:/list-todos";
 	}
 
+	//non controller methods
+	private String retrieveLoggedinUserName(){
+		return "in28Minutes";
+	}
 }
